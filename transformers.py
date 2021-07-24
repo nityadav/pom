@@ -1,6 +1,7 @@
 import json
 from data_models import *
 from collections import defaultdict
+import dataclasses
 
 
 def get_batting_features(batting_dict: dict, bat_pos: int, inn_num: int):
@@ -22,6 +23,8 @@ class Scorecard(object):
     def __init__(self, filepath):
         with open(filepath) as scorecard_f:
             self.scorecard = json.load(scorecard_f)
+            self.pom = self.scorecard.get("pom", None)
+            self.performances = defaultdict(PerformanceFeatures)
             all_battings = {}
             all_bowlings = {}
             for inn_idx, inn in enumerate(self.scorecard.get("innings", [])):
@@ -29,11 +32,40 @@ class Scorecard(object):
                 # python 3.5 or greater
                 all_battings = {**all_battings, **bt}
                 all_bowlings = {**all_bowlings, **bw}
-            all_performances = defaultdict(PerformanceFeatures)
             for p, b in all_battings.items():
+                self.performances[p].add_batting(b)
+            for p, b in all_bowlings.items():
+                self.performances[p].add_bowling(b)
+            self.inn1_summary = self._get_innings_summary(1)
+            self.inn2_summary = self._get_innings_summary(2)
+            self.features_dict = self._get_features_dict()
+
+    def _get_features_dict(self) -> dict:
+        inn1_features = {"inn1_{}".format(k): v for k, v in dataclasses.asdict(self.inn1_summary).items()}
+        inn2_features = {"inn2_{}".format(k): v for k, v in dataclasses.asdict(self.inn2_summary).items()}
+        return {p: {**dataclasses.asdict(bb), **inn1_features, **inn2_features} for p, bb in self.performances.items()}
+
+    def _if_pom(self, player_id) -> int:
+        return 1 if self.pom is not None and self.pom == player_id else 0
+
+    def get_features_with_label_list(self, include_labelled_only=True) -> list:
+        features_with_label = [{**f, "pom": self._if_pom(p)} for p, f in self.features_dict.items()]
+        return [] if include_labelled_only and self.pom is None else features_with_label
+
+    def _get_innings_summary(self, inn_num):
+        inn_summary = InningFeatures()
+        for bb in self.performances.values():
+            if bb.bat_inn_num == inn_num:
+                inn_summary.runs += bb.runs
+                inn_summary.balls_faced += bb.balls_faced
+                inn_summary.num_batsmen += 1
+            if bb.bowl_inn_num == inn_num:
+                inn_summary.wickets += bb.wickets  # run outs get excluded
+                inn_summary.num_bowlers += 1
+        return inn_summary
 
 
-
-    def get_match_features(self):
-
-
+if __name__ == '__main__':
+    test_scorecard = Scorecard('scorecards/64180.json')
+    with open('test.json', 'w') as test_f:
+        json.dump(test_scorecard.get_features_with_label_list(), test_f)

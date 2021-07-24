@@ -32,8 +32,8 @@ class BowlingFeatures:
 
 @dataclass(frozen=False)
 class PerformanceFeatures:
-    bat_inn_num: int
-    bowl_inn_num: int
+    bat_inn_num: int = 0
+    bowl_inn_num: int = 0
     runs: int = 0
     balls_faced: int = 0
     bat_pos: int = 0
@@ -41,4 +41,23 @@ class PerformanceFeatures:
     runs_given: int = 0
     overs_bowled: float = 0.0
 
-    def add_batting(self):
+    def add_batting(self, btf: BattingFeatures):
+        self.runs = btf.runs
+        self.balls_faced = btf.balls_faced
+        self.bat_pos = btf.bat_pos
+        self.bat_inn_num = btf.inn_num
+
+    def add_bowling(self, bwf: BowlingFeatures):
+        self.wickets = bwf.wickets
+        self.runs_given = bwf.runs_given
+        self.overs_bowled = bwf.overs
+        self.bowl_inn_num = bwf.inn_num
+
+
+@dataclass(frozen=False)
+class InningFeatures:
+    runs: int = 0
+    balls_faced: int = 0
+    num_batsmen: int = 0
+    wickets: int = 0
+    num_bowlers: int = 0
