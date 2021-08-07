@@ -1,3 +1,5 @@
 .DS_Store
-scorecards/
 .idea/
+scorecards/
+test/
+train/

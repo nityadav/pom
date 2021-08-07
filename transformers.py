@@ -48,9 +48,19 @@ class Scorecard(object):
     def _if_pom(self, player_id) -> int:
         return 1 if self.pom is not None and self.pom == player_id else 0
 
-    def get_features_with_label_list(self, include_labelled_only=True) -> list:
+    def get_features_with_label(self, include_labelled_only=True) -> list:
+        features_with_label, player_list = [], []
+        for p, f in self.features_dict.items():
+            features_with_label.append({**f, "pom": self._if_pom(p)})
+            player_list.append(p)
         features_with_label = [{**f, "pom": self._if_pom(p)} for p, f in self.features_dict.items()]
         return [] if include_labelled_only and self.pom is None else features_with_label
+
+    def if_pom_bowler(self):
+        if self.pom is not None:
+            return 1 if self.performances[self.pom].overs_bowled > 0.0 else 0
+        else:
+            return None
 
     def _get_innings_summary(self, inn_num):
         inn_summary = InningFeatures()
@@ -68,4 +78,4 @@ class Scorecard(object):
 if __name__ == '__main__':
     test_scorecard = Scorecard('scorecards/64180.json')
     with open('test.json', 'w') as test_f:
-        json.dump(test_scorecard.get_features_with_label_list(), test_f)
+        json.dump(test_scorecard.get_features_with_label(), test_f)
