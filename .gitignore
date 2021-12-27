@@ -3,3 +3,4 @@
 scorecards/
 test/
 train/
+__pycache__/
