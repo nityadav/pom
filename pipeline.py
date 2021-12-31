@@ -1,4 +1,3 @@
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
 
@@ -22,9 +21,8 @@ def get_raw_x_y(file_paths: list, label_key='pom'):
 
 
 class PomPipeline(object):
-    def __init__(self):
+    def __init__(self, estimator):
         vectorizer = DictVectorizer(sparse=False)
-        estimator = GradientBoostingClassifier(n_estimators=10, learning_rate=0.1, max_depth=6, random_state=0)
         self.pipeline = Pipeline(steps=[('vectorizer', vectorizer), ('estimator', estimator)])
         self.feature_importance = None
 
