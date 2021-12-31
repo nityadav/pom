@@ -4,3 +4,4 @@ scorecards/
 test/
 train/
 __pycache__/
+/analysis/
