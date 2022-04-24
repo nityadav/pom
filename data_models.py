@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from utils import *
+import utils
 
 
 @dataclass(frozen=False)
@@ -10,8 +10,8 @@ class BattingFeatures:
     inn_num: int
 
     def __init__(self, batting_dict: dict, bat_pos: int, inn_num: int):
-        self.runs = str2int(batting_dict.get("R", "0"))
-        self.balls_faced = str2int(batting_dict.get("B", "0"))
+        self.runs = utils.str2int(batting_dict.get("R", "0"))
+        self.balls_faced = utils.str2int(batting_dict.get("B", "0"))
         self.bat_pos = bat_pos
         self.inn_num = inn_num
 
@@ -24,9 +24,9 @@ class BowlingFeatures:
     inn_num: int
 
     def __init__(self, bowling_dict: dict, inn_num: int):
-        self.wickets = str2int(bowling_dict.get("W", "0"))
-        self.runs_given = str2int(bowling_dict.get("R", "0"))
-        self.overs = str2float(bowling_dict.get("O", "0"))
+        self.wickets = utils.str2int(bowling_dict.get("W", "0"))
+        self.runs_given = utils.str2int(bowling_dict.get("R", "0"))
+        self.overs = utils.str2float(bowling_dict.get("O", "0"))
         self.inn_num = inn_num
 
 
