@@ -10,11 +10,14 @@ def create_data(file_paths, output_dir):
     print("{} files copied at {}".format(len(file_paths), output_dir))
 
 
-split_factor = 0.8
-all_files = [os.path.join(config.data_dir, filename) for filename in os.listdir(config.data_dir) if filename.endswith(".json")]
-shuffle(all_files)
-split = int(len(all_files) * split_factor)
-train_files = all_files[:split]
-test_files = all_files[split:]
-create_data(train_files, config.train_dir)
-create_data(test_files, config.test_dir)
+if __name__ == '__main__':
+    all_files = [os.path.join(config.data_dir, filename) for filename in os.listdir(config.data_dir) if filename.endswith(".json")]
+    shuffle(all_files)
+    train_split = int(len(all_files) * 0.8)
+    dev_split = int(len(all_files) * 0.9)
+    train_files = all_files[:train_split]
+    dev_files = all_files[train_split:dev_split]
+    test_files = all_files[dev_split:]
+    create_data(train_files, config.train_dir)
+    create_data(dev_files, config.dev_dir)
+    create_data(test_files, config.test_dir)

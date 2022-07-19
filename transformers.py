@@ -66,11 +66,14 @@ class Scorecard(object):
         inn_summary = InningFeatures()
         for bb in self.performances.values():
             if bb.bat_inn_num == inn_num:
-                inn_summary.runs += bb.runs
-                inn_summary.balls_faced += bb.balls_faced
+                if bb.runs is not None:
+                    inn_summary.runs += bb.runs
+                if bb.balls_faced is not None:
+                    inn_summary.balls_faced += bb.balls_faced
                 inn_summary.num_batsmen += 1
             if bb.bowl_inn_num == inn_num:
-                inn_summary.wickets += bb.wickets  # run outs get excluded
+                if bb.wickets is not None:
+                    inn_summary.wickets += bb.wickets  # run outs get excluded
                 inn_summary.num_bowlers += 1
         return inn_summary
 

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from transformers import Scorecard
 
 
@@ -17,11 +19,14 @@ def get_raw_x_y(file_paths: list, label_key='pom'):
     return all_predictors, all_labels
 
 
-def str2float(s: str) -> float:
-    s = s.replace("-", "")
-    s = s.replace("*", "")
-    return float(s) if s else 0.0
+def str2float(s: str) -> Optional[float]:
+    if s is not None:
+        s = s.replace("-", "")
+        s = s.replace("*", "")
+        return float(s) if s else 0.0
+    else:
+        return None
 
 
-def str2int(s: str) -> int:
-    return int(str2float(s))
+def str2int(s: str) -> Optional[int]:
+    return None if s is None else int(str2float(s))
