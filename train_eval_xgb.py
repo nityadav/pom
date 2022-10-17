@@ -19,6 +19,9 @@ def load_data(x, y, vectorizer, train=False):
 
 
 def main(args):
+    if not os.path.isdir(config.models_dir):
+        os.mkdir(config.models_dir)
+
     train_file_paths = [os.path.join(config.train_dir, filename) for filename in os.listdir(config.train_dir)]
     dev_file_paths = [os.path.join(config.dev_dir, filename) for filename in os.listdir(config.dev_dir)]
     test_file_paths = [os.path.join(config.test_dir, filename) for filename in os.listdir(config.test_dir)]
