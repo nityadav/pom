@@ -1,4 +1,5 @@
-data_dir = 'scorecards'
-train_dir = 'data/train'
-dev_dir = 'data/dev'
-test_dir = 'data/test'
+scorecards_dir = 'scorecards'
+data_dir = 'data'
+train_dir = '{}/train'.format(data_dir)
+dev_dir = '{}/dev'.format(data_dir)
+test_dir = '{}/test'.format(data_dir)
