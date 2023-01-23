@@ -4,3 +4,6 @@
 
 ### Steps to train XGBoost model and test
 Run `train_eval_xgb.py`
+
+### To add new features
+Change `data_models.py` by adding your feature in the ``PerformanceFeatures`` class

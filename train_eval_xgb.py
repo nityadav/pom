@@ -8,6 +8,7 @@ from sklearn.metrics import classification_report
 
 import config
 import utils
+from tabulate import tabulate
 
 
 def load_data(x, y, vectorizer, train=False):
@@ -16,6 +17,11 @@ def load_data(x, y, vectorizer, train=False):
     x_mat = vectorizer.transform(x)
     y_arr = np.array(y)
     return x_mat, y_arr, xgb.DMatrix(x_mat, label=y_arr, missing=np.NaN, feature_names=vectorizer.get_feature_names_out())
+
+
+def get_feature_imp(contribution_matrix, feature_names):
+    feature_contribs = np.sum(np.abs(contribution_matrix), axis=0)
+    return sorted(zip(feature_names, feature_contribs), key=lambda x: x[1], reverse=True)
 
 
 def main(args):
@@ -48,6 +54,9 @@ def main(args):
         booster = xgb.train(train_params, dtrain, 10, evals=[(ddev, 'eval'), (dtrain, 'train')])
         booster.save_model('models/{}.json'.format(args.model))
         booster.dump_model('models/{}.txt'.format(args.model))
+        contribs = booster.predict(dtest, pred_contribs=True)
+        feat_imp = get_feature_imp(contribs[:, :-1], dict_vectorizer.get_feature_names_out().tolist())
+        print('Features by their importance:\n{}'.format(tabulate(feat_imp)))
     else:
         booster = xgb.Booster()
         booster.load_model('models/{}.json'.format(args.model))

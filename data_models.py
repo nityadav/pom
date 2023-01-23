@@ -6,12 +6,14 @@ import utils
 class BattingFeatures:
     runs: int
     balls_faced: int
+    sr: float
     bat_pos: int
     inn_num: int
 
     def __init__(self, batting_dict: dict, bat_pos: int, inn_num: int):
         self.runs = utils.str2int(batting_dict.get("R", None))
         self.balls_faced = utils.str2int(batting_dict.get("B", None))
+        self.sr = None if self.runs is None or self.balls_faced is None or self.balls_faced == 0 else (self.runs * 100 / self.balls_faced)
         self.bat_pos = bat_pos
         self.inn_num = inn_num
 
@@ -36,6 +38,7 @@ class PerformanceFeatures:
     bowl_inn_num: int = None
     runs: int = None
     balls_faced: int = None
+    sr: float = None
     bat_pos: int = None
     wickets: int = None
     runs_given: int = None
@@ -44,6 +47,7 @@ class PerformanceFeatures:
     def add_batting(self, btf: BattingFeatures):
         self.runs = btf.runs
         self.balls_faced = btf.balls_faced
+        self.sr = btf.sr
         self.bat_pos = btf.bat_pos
         self.bat_inn_num = btf.inn_num
 
