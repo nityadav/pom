@@ -1,9 +1,7 @@
 .DS_Store
 .idea/
 scorecards/
-data/test/
-data/train/
-data/dev/
+data/
 __pycache__/
 analysis/
 models/

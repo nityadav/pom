@@ -4,3 +4,7 @@ models_dir = 'models'
 train_dir = '{}/train'.format(data_dir)
 dev_dir = '{}/dev'.format(data_dir)
 test_dir = '{}/test'.format(data_dir)
+features_file = 'features.txt'
+train_file = '{}/train.svm'.format(data_dir)
+dev_file = '{}/dev.svm'.format(data_dir)
+test_file = '{}/test.svm'.format(data_dir)
