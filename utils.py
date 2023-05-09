@@ -34,7 +34,9 @@ def str2int(s: str) -> Optional[int]:
 
 def get_feat_to_idx_map(features_name_file):
     with open(features_name_file) as f:
-        return {feature.strip(): idx for idx, feature in enumerate(f)}
+        features_names = [feature.strip() for feature in f]
+        features_dict = {feature: idx for idx, feature in enumerate(features_names)}
+        return features_dict, features_names
 
 
 def dict2svm(features_dict, label_feature, qid, feat_to_idx_map):
@@ -44,7 +46,7 @@ def dict2svm(features_dict, label_feature, qid, feat_to_idx_map):
 
 
 def json_to_svm(json_dir, features_name_file, svm_out_file):
-    feat_to_idx_map = get_feat_to_idx_map(features_name_file)
+    feat_to_idx_map, _ = get_feat_to_idx_map(features_name_file)
     match_files = [os.path.join(json_dir, filename) for filename in os.listdir(json_dir) if filename.endswith('json')]
     with open(svm_out_file, 'w') as out_f:
         svm_lines = []
@@ -54,3 +56,6 @@ def json_to_svm(json_dir, features_name_file, svm_out_file):
             features_dict_list = scorecard.get_features_with_label()
             svm_lines += [dict2svm(features_dict, 'pom', match_id, feat_to_idx_map) for features_dict in features_dict_list]
         out_f.write('\n'.join(svm_lines))
+
+
+

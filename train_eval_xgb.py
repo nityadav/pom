@@ -20,7 +20,7 @@ def load_data(x, y, vectorizer, train=False):
 
 
 def get_feature_imp(contribution_matrix, feature_names):
-    feature_contribs = np.sum(np.abs(contribution_matrix), axis=0)
+    feature_contribs = np.mean(np.abs(contribution_matrix), axis=0)
     return sorted(zip(feature_names, feature_contribs), key=lambda x: x[1], reverse=True)
 
 
